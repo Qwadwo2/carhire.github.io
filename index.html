@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PickUs Car Rentals | Rent Luxury & Reliable Cars in Accra</title>
+  <meta name="description" content="Explore our fleet of SUVs, sedans, and luxury cars. Reliable service in Accra. Request to book in minutes." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <meta property="og:title" content="PickUs Car Rentals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/og-hero.jpg" />
+  <meta property="og:description" content="Your first choice for car rentals in Accra." />
+</head>
+<body class="bg-neutral-950 text-white">
+  <!-- Navbar -->
+  <header class="fixed w-full bg-neutral-950/70 backdrop-blur z-50 border-b border-neutral-800">
+    <div class="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+      <a href="#" class="font-bold text-xl" aria-label="PickUs home">PickUs</a>
+      <nav class="space-x-6 text-sm" aria-label="Main navigation">
+        <a href="#catalog">Catalog</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative h-[70vh] flex items-center justify-center bg-cover bg-center" style="background-image:url('assets/hero.jpg')" role="img" aria-label="Luxury car on road">
+    <div class="relative z-10 text-center max-w-3xl px-4">
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">Drive Excellence.</h1>
+      <p class="mt-4 text-neutral-300">Luxury, comfort, and reliability—your perfect ride awaits in Accra.</p>
+      <a href="#catalog" class="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded">Browse Fleet</a>
+    </div>
+  </section>
+
+  <!-- Filters & Grid -->
+  <main id="catalog" class="mx-auto max-w-7xl px-4 py-12">
+    <div class="mb-6 grid grid-cols-2 md:grid-cols-5 gap-3">
+      <select id="brand" class="bg-neutral-900 border border-neutral-700 rounded p-2" aria-label="Filter by brand">
+        <option value="">Brand</option>
+      </select>
+      <select id="category" class="bg-neutral-900 border border-neutral-700 rounded p-2" aria-label="Filter by category">
+        <option value="">Category</option>
+      </select>
+      <select id="transmission" class="bg-neutral-900 border border-neutral-700 rounded p-2" aria-label="Filter by transmission">
+        <option value="">Transmission</option>
+        <option>Automatic</option><option>Manual</option>
+      </select>
+      <select id="fuel" class="bg-neutral-900 border border-neutral-700 rounded p-2" aria-label="Filter by fuel">
+        <option value="">Fuel</option>
+        <option>Petrol</option><option>Diesel</option><option>Hybrid</option><option>Electric</option>
+      </select>
+      <input id="search" placeholder="Search…" class="bg-neutral-900 border border-neutral-700 rounded p-2" aria-label="Search cars" />
+    </div>
+    <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
+
+  <script src="js/catalog.js" defer></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Car",
+  "name": "PickUs Car Rentals",
+  "brand": "Various",
+  "image": "https://yourusername.github.io/assets/og-hero.jpg",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "GHS",
+    "availability": "https://schema.org/InStock"
+  },
+  "areaServed": "Accra, Ghana",
+  "url": "https://yourusername.github.io/"
+}
+</script>
+
+</body>
+</html>

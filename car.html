@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Car Details | PickUs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-neutral-950 text-white">
+  <main class="mx-auto max-w-6xl px-4 py-10" id="content"></main>
+  <script type="module">
+    import { getJSON } from "./js/api.js";
+    const API = "https://yourapp.onrender.com/api/catalog";
+
+    (async () => {
+      const params = new URLSearchParams(location.search);
+      const slug = params.get("slug");
+
+      const el = document.getElementById("content");
+      if (!slug) {
+        el.innerHTML = `<p class="text-neutral-300">No car selected. Please go back to the catalog.</p>`;
+        return;
+      }
+
+      try {
+        const data = await getJSON(`${API}/cars/${encodeURIComponent(slug)}/`);
+        const c = data;
+        if (!c) {
+          el.innerHTML = `<p class="text-neutral-300">Car not found.</p>`;
+          return;
+        }
+
+        const heroImg = c.hero_image
+          ? `<img src="${c.hero_image}" alt="${(c.brand?.name || '') + ' ' + (c.name || '')}" class="w-full h-auto rounded" />`
+          : `<div class="w-full h-56 bg-neutral-900 rounded flex items-center justify-center text-neutral-500">No image</div>`;
+
+        const thumbs = Array.isArray(c.images) && c.images.length
+          ? c.images.map(i => `<img src="${i.image}" alt="${c.name || 'thumbnail'}" class="w-full h-24 object-cover rounded" />`).join("")
+          : '';
+
+        el.innerHTML = `
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          ${heroImg}
+          <div class="mt-3 grid grid-cols-4 gap-2">
+            ${thumbs}
+          </div>
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold">${c.brand?.name || ''} ${c.name || ''}</h1>
+          <p class="mt-2 text-neutral-300">${c.description || c.short_desc || ""}</p>
+          <p class="mt-3"><span class="text-yellow-400 font-bold">GHS ${Number(c.price_per_day || 0).toLocaleString()}</span> / day</p>
+          <ul class="mt-4 grid grid-cols-2 gap-2 text-sm text-neutral-300">
+            <li>Year: ${c.year ?? '—'}</li><li>Transmission: ${c.transmission ?? '—'}</li>
+            <li>Fuel: ${c.fuel ?? '—'}</li><li>Seats: ${c.seats ?? '—'}</li><li>Doors: ${c.doors ?? '—'}</li>
+          </ul>
+
+          <form id="lead" class="mt-6 space-y-3 bg-neutral-900 p-4 rounded border border-neutral-800">
+            <input name="full_name" placeholder="Full name" class="w-full p-2 rounded bg-neutral-800 border border-neutral-700"/>
+            <input name="email" placeholder="Email" type="email" class="w-full p-2 rounded bg-neutral-800 border border-neutral-700"/>
+            <input name="phone" placeholder="Phone" class="w-full p-2 rounded bg-neutral-800 border border-neutral-700"/>
+            <div class="grid grid-cols-2 gap-3">
+              <input name="pickup_date" type="date" class="p-2 rounded bg-neutral-800 border border-neutral-700"/>
+              <input name="dropoff_date" type="date" class="p-2 rounded bg-neutral-800 border border-neutral-700"/>
+            </div>
+            <textarea name="message" placeholder="Message (optional)" class="w-full p-2 rounded bg-neutral-800 border border-neutral-700"></textarea>
+            <button id="submitBtn" class="px-5 py-2 rounded bg-yellow-500 text-black font-semibold hover:bg-yellow-400">Request to Book</button>
+            <p id="status" class="text-sm text-neutral-400"></p>
+          </form>
+        </div>
+      </div>
+    `;
+      } catch (err) {
+        el.innerHTML = `<p class="text-neutral-300">Error loading car details. Please try again later.</p>`;
+        // optionally log to console for debugging
+        console.error(err);
+        return;
+      }
+
+      document.getElementById("lead").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.disabled = true;
+        const fd = new FormData(e.target);
+        const payload = Object.fromEntries(fd.entries());
+        payload.car_slug = slug;
+        try {
+          const res = await fetch("https://yourapp.onrender.com/api/leads/", {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify(payload)
+          });
+          document.getElementById("status").textContent = res.ok ? "Thanks! We will contact you shortly." : "Something went wrong. Please try again.";
+        } catch (err) {
+          document.getElementById("status").textContent = "Network error. Please try again.";
+          console.error(err);
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
